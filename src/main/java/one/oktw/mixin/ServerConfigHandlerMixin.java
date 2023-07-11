@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ServerConfigHandler.class)
 public class ServerConfigHandlerMixin {
     @Redirect(method = "lookupProfile", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;isOnlineMode()Z"))
-    private static boolean lookupProfile(MinecraftServer minecraftServer) {
+    private static boolean fabricproxylegacy$lookupProfile_MinecraftServer$isOnlineMode(MinecraftServer minecraftServer) {
         return true;
     }
 }

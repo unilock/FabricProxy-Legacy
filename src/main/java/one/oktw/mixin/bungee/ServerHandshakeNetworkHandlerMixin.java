@@ -16,6 +16,7 @@ import one.oktw.mixin.ClientConnectionAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -24,37 +25,35 @@ import java.net.InetSocketAddress;
 
 @Mixin(ServerHandshakeNetworkHandler.class)
 public class ServerHandshakeNetworkHandlerMixin {
-
+    @Unique
     private static final Gson gson = new Gson();
 
     @Shadow
     @Final
     private ClientConnection connection;
 
-
-    @Inject(method = "onHandshake", at = @At(value = "INVOKE", target =
-            "Lnet/minecraft/server/network/ServerLoginNetworkHandler;<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/network/ClientConnection;)V"))
-    private void onProcessHandshakeStart(HandshakeC2SPacket packet, CallbackInfo ci) {
+    /**
+     * onProcessHandshakeStart
+     */
+    @Inject(method = "onHandshake", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerLoginNetworkHandler;<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/network/ClientConnection;)V"))
+    private void fabricproxylegacy$onHandshake_ServerLoginNetworkHandler$init(HandshakeC2SPacket packet, CallbackInfo ci) {
         if (packet.getIntendedState().equals(NetworkState.LOGIN)) {
             String[] split = ((HandshakeC2SPacketAccessor) packet).getAddress().split("\00");
             if (split.length == 3 || split.length == 4) {
-                // override/insert forwarded IP into connection:
+                // override/insert forwarded IP into connection
                 ((ClientConnectionAccessor) connection).setAddress(
                         new InetSocketAddress(split[1], ((InetSocketAddress) connection.getAddress()).getPort())
                 );
 
-
-                // extract forwarded profile information and save them:
-                ((BungeeClientConnection) connection).setSpoofedUUID(UUIDTypeAdapter.fromString(split[2]));
+                // extract and save forwarded profile information
+                ((BungeeClientConnection) connection).fabricproxylegacy$setSpoofedUUID(UUIDTypeAdapter.fromString(split[2]));
 
                 if (split.length == 4) {
-                    ((BungeeClientConnection) connection).setSpoofedProfile(gson.fromJson(split[3], Property[].class));
+                    ((BungeeClientConnection) connection).fabricproxylegacy$setSpoofedProfile(gson.fromJson(split[3], Property[].class));
                 }
             } else {
-                // no extra information found in the address, disconnecting player:
-                Text disconnectMessage = MutableText.of(new LiteralTextContent(
-                        "Bypassing proxy not allowed! If you wish to use IP forwarding, " +
-                                "please enable it in your BungeeCord config as well!"));
+                // no extra information found in the address; disconnect player
+                Text disconnectMessage = MutableText.of(new LiteralTextContent("This server requires you to connect with Velocity."));
                 connection.send(new LoginDisconnectS2CPacket(disconnectMessage));
                 connection.disconnect(disconnectMessage);
             }

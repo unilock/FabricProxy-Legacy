@@ -5,11 +5,11 @@ import com.mojang.authlib.properties.Property;
 import java.util.UUID;
 
 public interface BungeeClientConnection {
-    UUID getSpoofedUUID();
+    UUID fabricproxylegacy$getSpoofedUUID();
 
-    void setSpoofedUUID(UUID uuid);
+    void fabricproxylegacy$setSpoofedUUID(UUID uuid);
 
-    Property[] getSpoofedProfile();
+    Property[] fabricproxylegacy$getSpoofedProfile();
 
-    void setSpoofedProfile(Property[] profile);
+    void fabricproxylegacy$setSpoofedProfile(Property[] profile);
 }
