@@ -19,10 +19,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerLoginNetworkHandlerMixin {
     @Shadow
     @Final
-    public ClientConnection connection;
+    ClientConnection connection;
 
     @Shadow
-    private GameProfile profile;
+    GameProfile profile;
 
     /**
      * initUuid
