@@ -3,24 +3,24 @@
   "id": "fabricproxy-legacy",
   "version": "${version}",
   "name": "FabricProxy Legacy",
-  "description": "Support forward player data from proxy",
+  "description": "Support player data forwarding from proxies",
   "authors": [
     "james58899",
-    "voruti"
+    "voruti",
+    "unilock"
   ],
   "contact": {
-    "homepage": "https://github.com/voruti/FabricProxy",
-    "sources": "https://github.com/voruti/FabricProxy"
+    "homepage": "https://github.com/voruti/FabricProxy-Legacy",
+    "sources": "https://github.com/voruti/FabricProxy-Legacy"
   },
   "license": "MIT",
   "environment": "server",
-  "entrypoints": {},
   "mixins": [
     "common.mixins.json",
     "bungee.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.9",
+    "fabricloader": "*",
     "minecraft": ">=1.19.2"
   }
 }
