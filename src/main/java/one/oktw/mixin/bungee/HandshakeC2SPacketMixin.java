@@ -11,7 +11,7 @@ public abstract class HandshakeC2SPacketMixin {
      * readStringSize
      */
     @ModifyConstant(method = "<init>(Lnet/minecraft/network/PacketByteBuf;)V", constant = @Constant(intValue = 255))
-    private int fabricproxylegacy$init_constant255(int i) {
+    private static int init_constant255(int i) {
         return Short.MAX_VALUE;
     }
 }

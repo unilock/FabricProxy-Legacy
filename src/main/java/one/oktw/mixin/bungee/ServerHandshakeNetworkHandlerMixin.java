@@ -2,7 +2,7 @@ package one.oktw.mixin.bungee;
 
 import com.google.gson.Gson;
 import com.mojang.authlib.properties.Property;
-import com.mojang.util.UUIDTypeAdapter;
+import com.mojang.util.UndashedUuid;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.NetworkState;
 import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
@@ -33,12 +33,18 @@ public class ServerHandshakeNetworkHandlerMixin {
     private ClientConnection connection;
 
     /**
-     * onProcessHandshakeStart
+     * onProcessHandshakeStart<br>
+     * <br>
+     * For context:<br>
+     * > BungeeCord IP forwarding is simply a special injection after the "address" in the handshake,<br>
+     * > separated by \0 (the null byte). In order, you send the original host, the player's IP, their<br>
+     * > UUID (undashed), and if you are in online-mode, their login properties (from Mojang).<br>
+     * <a href="https://github.com/PaperMC/Velocity/blob/f884e049c006f5fae14abaab9332ccaad9f001e0/proxy/src/main/java/com/velocitypowered/proxy/connection/backend/VelocityServerConnection.java#L143">VelocityServerConnection.java</a>
      */
     @Inject(method = "onHandshake", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerLoginNetworkHandler;<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/network/ClientConnection;)V"))
-    private void fabricproxylegacy$onHandshake_ServerLoginNetworkHandler$init(HandshakeC2SPacket packet, CallbackInfo ci) {
-        if (packet.getIntendedState().equals(NetworkState.LOGIN)) {
-            String[] split = ((HandshakeC2SPacketAccessor) packet).getAddress().split("\00");
+    private void onHandshake_ServerLoginNetworkHandler$init(HandshakeC2SPacket packet, CallbackInfo ci) {
+        if (packet.intendedState().getState().equals(NetworkState.LOGIN)) {
+            String[] split = packet.address().split("\00");
             if (split.length == 3 || split.length == 4) {
                 // override/insert forwarded IP into connection
                 ((ClientConnectionAccessor) connection).setAddress(
@@ -46,7 +52,7 @@ public class ServerHandshakeNetworkHandlerMixin {
                 );
 
                 // extract and save forwarded profile information
-                ((BungeeClientConnection) connection).fabricproxylegacy$setSpoofedUUID(UUIDTypeAdapter.fromString(split[2]));
+                ((BungeeClientConnection) connection).fabricproxylegacy$setSpoofedUUID(UndashedUuid.fromString(split[2]));
 
                 if (split.length == 4) {
                     ((BungeeClientConnection) connection).fabricproxylegacy$setSpoofedProfile(gson.fromJson(split[3], Property[].class));

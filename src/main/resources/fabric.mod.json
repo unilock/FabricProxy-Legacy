@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "fabricproxy-legacy",
   "version": "${version}",
-  "name": "FabricProxy Legacy",
+  "name": "FabricProxy-Legacy",
   "description": "Support player data forwarding from proxies",
   "authors": [
     "james58899",
@@ -21,6 +21,6 @@
   ],
   "depends": {
     "fabricloader": "*",
-    "minecraft": ">=1.20.1"
+    "minecraft": ">=1.20.2"
   }
 }

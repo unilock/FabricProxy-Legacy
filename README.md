@@ -1,12 +1,8 @@
 # FabricProxy-Legacy
 
-Fabric mod to support player data forwarding from proxies
+Fabric mod to support "legacy" player data forwarding from proxies.
 
-Inspired by [FabricProxy], this mod is the counterpart to [FabricProxy-Lite]. It allows to connect your Fabric server to a BungeeCord, Waterfall, or Velocity (legacy mode) server.
-
-## Disclaimer
-
-I'm not 100% sure what I'm doing, it just works; I would appreciate pull requests.
+Inspired by [FabricProxy], this mod is the counterpart to [FabricProxy-Lite]. It allows players to connect your Fabric server through a BungeeCord, Waterfall, or Velocity (legacy mode) server.
 
 [FabricProxy]: https://github.com/OKTW-Network/FabricProxy
 
