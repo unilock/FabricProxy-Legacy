@@ -8,8 +8,6 @@ import net.minecraft.network.NetworkState;
 import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
 import net.minecraft.network.packet.s2c.login.LoginDisconnectS2CPacket;
 import net.minecraft.server.network.ServerHandshakeNetworkHandler;
-import net.minecraft.text.LiteralTextContent;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import one.oktw.interfaces.BungeeClientConnection;
 import one.oktw.mixin.ClientConnectionAccessor;
@@ -59,7 +57,7 @@ public class ServerHandshakeNetworkHandlerMixin {
                 }
             } else {
                 // no extra information found in the address; disconnect player
-                Text disconnectMessage = MutableText.of(new LiteralTextContent("This server requires you to connect with Velocity."));
+                Text disconnectMessage = Text.literal("This server requires you to connect with Velocity.");
                 connection.send(new LoginDisconnectS2CPacket(disconnectMessage));
                 connection.disconnect(disconnectMessage);
             }
