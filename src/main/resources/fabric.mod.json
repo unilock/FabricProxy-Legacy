@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "fabricproxy-legacy",
   "version": "${version}",
-  "name": "FabricProxy Legacy",
+  "name": "FabricProxy-Legacy",
   "description": "Support player data forwarding from proxies",
   "authors": [
     "james58899",
@@ -10,7 +10,6 @@
     "unilock"
   ],
   "contact": {
-    "homepage": "https://github.com/voruti/FabricProxy-Legacy",
     "sources": "https://github.com/voruti/FabricProxy-Legacy"
   },
   "license": "MIT",
@@ -21,6 +20,6 @@
   ],
   "depends": {
     "fabricloader": "*",
-    "minecraft": ">=1.19.2"
+    "minecraft": ">=1.19"
   }
 }

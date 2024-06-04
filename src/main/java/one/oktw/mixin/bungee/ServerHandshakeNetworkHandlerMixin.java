@@ -8,8 +8,6 @@ import net.minecraft.network.NetworkState;
 import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
 import net.minecraft.network.packet.s2c.login.LoginDisconnectS2CPacket;
 import net.minecraft.server.network.ServerHandshakeNetworkHandler;
-import net.minecraft.text.LiteralTextContent;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import one.oktw.interfaces.BungeeClientConnection;
 import one.oktw.mixin.ClientConnectionAccessor;
@@ -33,10 +31,16 @@ public class ServerHandshakeNetworkHandlerMixin {
     private ClientConnection connection;
 
     /**
-     * onProcessHandshakeStart
+     * onProcessHandshakeStart<br>
+     * <br>
+     * For context:<br>
+     * > BungeeCord IP forwarding is simply a special injection after the "address" in the handshake,<br>
+     * > separated by \0 (the null byte). In order, you send the original host, the player's IP, their<br>
+     * > UUID (undashed), and if you are in online-mode, their login properties (from Mojang).<br>
+     * <a href="https://github.com/PaperMC/Velocity/blob/f884e049c006f5fae14abaab9332ccaad9f001e0/proxy/src/main/java/com/velocitypowered/proxy/connection/backend/VelocityServerConnection.java#L143">VelocityServerConnection.java</a>
      */
     @Inject(method = "onHandshake", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerLoginNetworkHandler;<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/network/ClientConnection;)V"))
-    private void fabricproxylegacy$onHandshake_ServerLoginNetworkHandler$init(HandshakeC2SPacket packet, CallbackInfo ci) {
+    private void onHandshake_ServerLoginNetworkHandler$init(HandshakeC2SPacket packet, CallbackInfo ci) {
         if (packet.getIntendedState().equals(NetworkState.LOGIN)) {
             String[] split = ((HandshakeC2SPacketAccessor) packet).getAddress().split("\00");
             if (split.length == 3 || split.length == 4) {
@@ -53,7 +57,7 @@ public class ServerHandshakeNetworkHandlerMixin {
                 }
             } else {
                 // no extra information found in the address; disconnect player
-                Text disconnectMessage = MutableText.of(new LiteralTextContent("This server requires you to connect with Velocity."));
+                Text disconnectMessage = Text.literal("This server requires you to connect with Velocity.");
                 connection.send(new LoginDisconnectS2CPacket(disconnectMessage));
                 connection.disconnect(disconnectMessage);
             }
